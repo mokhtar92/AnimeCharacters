@@ -34,10 +34,12 @@ An Android application built with Kotlin, Jetpack Compose, and modern Android de
 
 ### ✅ Prerequisites
 
-- Android Studio Giraffe or later
-- JDK 17+
-- Minimum SDK: 24
-- Compile SDK: 34
+- **Android Studio**: `Narwhal | 2025.1.1` or later
+  > If using an older version, check the [Android Gradle Plugin and Android Studio compatibility](https://developer.android.com/build/releases/gradle-plugin#android_gradle_plugin_and_android_studio_compatibility) table.
+- **JDK**: 17+
+- **Minimum SDK**: 24
+- **Compile SDK**: 34
+
 
 ### 🔧 Clone the Repository
 
