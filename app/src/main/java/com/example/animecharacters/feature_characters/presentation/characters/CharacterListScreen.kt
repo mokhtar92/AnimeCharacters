@@ -1,7 +1,8 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3WindowSizeClassApi::class)
 
 package com.example.animecharacters.feature_characters.presentation.characters
 
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,6 +33,9 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -64,6 +68,16 @@ fun CharacterListScreen(
     onSearchQueryChange: (String) -> Unit,
     onCharacterClicked: (CharacterUiModel) -> Unit
 ) {
+    val windowSizeClass = LocalActivity.current?.let { calculateWindowSizeClass(it) }
+
+    // Decide span based on width size class
+    val gridSpanCount = when (windowSizeClass?.widthSizeClass) {
+        WindowWidthSizeClass.Compact -> 2 // Phone portrait
+        WindowWidthSizeClass.Medium -> 4 // Foldables or small tablets
+        WindowWidthSizeClass.Expanded -> 4 // Large tablets or landscape
+        else -> 2
+    }
+
     var searchQuery by rememberSaveable { mutableStateOf("") }
 
     Surface {
@@ -116,7 +130,7 @@ fun CharacterListScreen(
                         val characters = state.characters.collectAsLazyPagingItems()
 
                         LazyVerticalGrid(
-                            columns = GridCells.Fixed(2),
+                            columns = GridCells.Fixed(gridSpanCount),
                             modifier = Modifier.fillMaxSize(),
                             contentPadding = PaddingValues(8.dp),
                             verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -131,10 +145,11 @@ fun CharacterListScreen(
                                 }
                             }
 
-                            // Refresh Error
+                            fun fullSpan() = GridItemSpan(gridSpanCount)
+
                             when (val refreshState = characters.loadState.refresh) {
                                 is LoadState.Error -> {
-                                    item(span = { GridItemSpan(2) }) {
+                                    item(span = { fullSpan() }) {
                                         ErrorState(
                                             message = getErrorMessage(refreshState.error),
                                             onRetry = { characters.retry() }
@@ -145,10 +160,9 @@ fun CharacterListScreen(
                                 else -> Unit
                             }
 
-                            // Append (pagination) states
                             when (val appendState = characters.loadState.append) {
                                 is LoadState.Loading -> {
-                                    item(span = { GridItemSpan(2) }) {
+                                    item(span = { fullSpan() }) {
                                         Row(
                                             modifier = Modifier
                                                 .fillMaxWidth()
@@ -161,7 +175,7 @@ fun CharacterListScreen(
                                 }
 
                                 is LoadState.Error -> {
-                                    item(span = { GridItemSpan(2) }) {
+                                    item(span = { fullSpan() }) {
                                         Column(
                                             modifier = Modifier
                                                 .fillMaxWidth()
@@ -184,12 +198,11 @@ fun CharacterListScreen(
                                 else -> Unit
                             }
 
-                            // Empty search result
                             if (characters.itemCount == 0 &&
                                 searchQuery.isNotBlank() &&
                                 characters.loadState.append !is LoadState.Loading
                             ) {
-                                item(span = { GridItemSpan(2) }) {
+                                item(span = { fullSpan() }) {
                                     Column(
                                         modifier = Modifier
                                             .fillMaxWidth()
