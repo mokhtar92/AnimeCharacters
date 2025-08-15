@@ -11,4 +11,5 @@
     <string name="unknown_error">Unknown error occurred.</string>
     <string name="no_characters_found">No characters found.</string>
     <string name="this_character_is_a">This character is a %1$s %2$s.</string>
+    <string name="more_about">More about %1$s</string>
 </resources>

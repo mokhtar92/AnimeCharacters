@@ -14,10 +14,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.animecharacters.feature_characters.presentation.character_details.CharacterDetailsScreen
 import com.example.animecharacters.feature_characters.presentation.characters.CharacterListIntent
 import com.example.animecharacters.feature_characters.presentation.characters.CharacterListScreen
 import com.example.animecharacters.feature_characters.presentation.characters.CharacterListViewModel
+import com.example.animecharacters.feature_characters.presentation.model.CharacterUiModel
 import com.example.animecharacters.navigation.Screen
+import com.example.animecharacters.navigation.Screen.CharactersScreen.KEY_CHARACTER
 import com.example.animecharacters.theme.AnimeCharactersTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -53,14 +56,23 @@ class MainActivity : ComponentActivity() {
                                    */
                                     navController.currentBackStackEntry
                                         ?.savedStateHandle
-                                        ?.set(Screen.CharactersScreen.KEY_CHARACTER, it)
+                                        ?.set(KEY_CHARACTER, it)
                                     navController.navigate(Screen.CharacterDetailsScreen.route)
                                 }
                             )
                         }
 
                         composable(Screen.CharacterDetailsScreen.route) {
+                            val character = navController.previousBackStackEntry
+                                ?.savedStateHandle
+                                ?.get<CharacterUiModel>(KEY_CHARACTER)
 
+                            character?.let {
+                                CharacterDetailsScreen(
+                                    character = character,
+                                    onBackPressed = { navController.popBackStack() }
+                                )
+                            }
                         }
                     }
                 }
