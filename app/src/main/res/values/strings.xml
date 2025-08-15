@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">AnimeCharacters</string>
+    <string name="search">Search…</string>
+    <string name="retry_loading_more">Retry Loading More</string>
+    <string name="retry">Retry</string>
+    <string name="please_check_your_internet_connection_and_retry">Please check your internet connection and retry.</string>
+    <string name="oops_something_went_wrong_please_try_again_later">Oops! Something went wrong. Please try again later.</string>
+    <string name="request_timed_out">Request timed out. Please try again.</string>
+    <string name="characters_not_found">Characters not found.</string>
+    <string name="server_error_try_again_later">Server error. Please try again later.</string>
+    <string name="unknown_error">Unknown error occurred.</string>
+    <string name="no_characters_found">No characters found.</string>
+    <string name="this_character_is_a">This character is a %1$s %2$s.</string>
 </resources>
